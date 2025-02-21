@@ -1,38 +1,70 @@
-const url = "http://localhost:3000"
+const url = "http://localhost:3000"; // Ganti dengan IP lokal Anda
 
 async function main() {
-  const data = await fetch(url+"/mahasiswa", {
-  })
-  const json = await data.json()
-  console.log(json)
+    const data = await fetch(`${url}/mahasiswa`);
+    const json = await data.json();
+    console.log(json);
 }
 
 async function login(username, password) {
-    const data = await fetch(url+"/login", {
+    const response = await fetch(`${url}/login`, {
         method: "POST",
         headers: {
-        "Content-Type": "application/json"
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify({username, password})
-    })
-    const json = await data.json()
-    if(data.status >= 400) return alert(json.message)
-    console.log(json)
-    alert("Berhasil Login")
-    return json
+        body: JSON.stringify({ username, password })
+    });
+    const json = await response.json();
+    if (response.status >= 400) return alert(json.message);
+    console.log(json);
+    alert("Berhasil Login");
+    localStorage.setItem('username', username);
+    localStorage.setItem('token', json.token);
+    window.location.href = 'menu.html';
+    return json;
 }
 
 async function register(username, password) {
-    const data = await fetch(url+"/register", {
+    const response = await fetch(`${url}/register`, {
         method: "POST",
         headers: {
-        "Content-Type": "application/json"
+            "Content-Type": "application/json"
         },
-        body: JSON.stringify({username, password})
-    })
-    const json = await data.json()
-    if(data.status >= 400) return alert(json.message)
-    alert("Berhasil Register")
-    console.log(json)
-    return json
+        body: JSON.stringify({ username, password })
+    });
+    const json = await response.json();
+    if (response.status >= 400) return alert(json.message);
+    alert("Berhasil Register");
+    console.log(json);
+    return json;
 }
+
+// Handle welcome message and logout on menu.html
+if (window.location.pathname.endsWith('menu.html')) {
+    document.addEventListener('DOMContentLoaded', () => {
+        const username = localStorage.getItem('username');
+        if (username) {
+            document.getElementById('welcomeMessage').innerText = `Welcome, ${username}!`;
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
+
+    function logout() {
+        localStorage.removeItem('username');
+        localStorage.removeItem('token');
+        window.location.href = 'login.html';
+    }
+
+    window.logout = logout;
+}
+
+//fungsi ini akan dijalankan ketika halaman selesai dimuat dan token telah di hapus di local storage
+window.addEventListener('storage', (event) => {
+    if (event.key === 'username' || event.key === 'token') {
+        if (!localStorage.getItem('username') || !localStorage.getItem('token')) {
+            alert('Sesi akan berakhir.');
+            window.location.href = 'login.html';
+        }
+    }
+});

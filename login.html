@@ -5,18 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="styles.css">
-  <title>Document</title>
+  <title>Login</title>
 
 </head>
 
 <body class="body">
-  <form id="form" class="container">
 
-    <h3>@tugasWeblanjut</h3>
-    <input type="text" id="username" placeholder="Username" class="input">
-    <input type="password" id="password" placeholder="Password" class="input">
-    <!-- <input type="submit" class="submit"> -->
-    <button type="submit" class="submit">login</button>
+  
+  <form id="form" class="container">
+    <h3>App chat</h3>
+    <input type="text" id="username" placeholder="Username" class="input" required>
+    <input type="password" id="password" placeholder="Password" class="input" required>
+    <button type="submit" class="submit">Login</button>
     <p>Belum punya akun? <a href="register.html">Register here</a></p>
 
   </form>
@@ -30,10 +30,7 @@
       ev.preventDefault();
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
-      
-
       login(username, password);
-     
     }
 
   </script>
